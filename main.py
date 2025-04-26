@@ -1,8 +1,10 @@
 import argparse, os, sys, time, requests, json
 MODEL="meta-llama/llama-4-maverick:free"
 ENDPOINT="https://openrouter.ai/v1/chat/completions"
+
 def build_prompt(args):
     return f"Write five fundraising emails and four social captions for the {args.event} on {args.date} in a {args.tone} tone."
+    
 def chat_completion(prompt):
     key=os.getenv("OPENROUTER_API_KEY")
     if not key:
@@ -15,6 +17,7 @@ def chat_completion(prompt):
         sys.exit(f"HTTP {r.status_code}: {r.text[:120]}")
     print(f"done in {dt:.2f}s",file=sys.stderr)
     return r.json()["choices"][0]["message"]["content"]
+    
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--event",default="Community Gala"); p.add_argument("--date",default="TBD"); p.add_argument("--tone",default="upbeat"); p.add_argument("--dry-run",action="store_true")
